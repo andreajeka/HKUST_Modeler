@@ -9,9 +9,14 @@
 // We'll use these constants to access the values 
 // of the controls from the user interface.
 enum SampleModelControls
-{ 
-	XPOS, YPOS, ZPOS, RIGHTHANDANGLE, NUMCONTROLS
+{
+	XPOS, YPOS, ZPOS, TAILMOVEMENT, NUMCONTROLS
 };
+
+// body size
+#define UPPER_TORSO_RADIUS 1.1
+#define LOWER_TORSO_HEIGHT 0.8
+#define HEAD_RADIUS 0.8
 
 // Colors
 #define COLOR_RED		1.0f, 0.0f, 0.0f
