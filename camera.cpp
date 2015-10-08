@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <Fl/gl.h>
 #include <gl/glu.h>
+#include <cmath>
 
 #include "camera.h"
 
@@ -178,9 +179,50 @@ void Camera::applyViewingTransform() {
 
 	// Place the camera at mPosition, aim the camera at
 	// mLookAt, and twist the camera such that mUpVector is up
-	gluLookAt(	mPosition[0], mPosition[1], mPosition[2],
+	/*gluLookAt(	mPosition[0], mPosition[1], mPosition[2],
 				mLookAt[0],   mLookAt[1],   mLookAt[2],
-				mUpVector[0], mUpVector[1], mUpVector[2]);
+				mUpVector[0], mUpVector[1], mUpVector[2]);*/
+	
+	// Use camera model view transformation instead of gluLookAt
+	lookAt(mPosition, mLookAt, mUpVector);
+}
+
+void Camera::lookAt(Vec3f eye, Vec3f at, Vec3f up) {
+	// Implementation from this website: 
+	// https://www.opengl.org/sdk/docs/man2/xhtml/gluLookAt.xml
+	
+	// Model View transformation
+	Vec3f forwardMV, sideMV, upMV;
+	Mat4f m;
+
+	forwardMV = at - eye;
+	upMV = up;
+	forwardMV.normalize();
+
+	/* Cross product -> 
+	   Side = forward x up */
+	sideMV = forwardMV ^ upMV;
+	sideMV.normalize();
+
+	/* Cross Product -> Recompute up as: 
+	   up = side x forward */
+	upMV = sideMV ^ forwardMV;
+
+	m[0][0] = sideMV[0];
+	m[1][0] = sideMV[1];
+	m[2][0] = sideMV[2];
+
+	m[0][1] = upMV[0];
+	m[1][1] = upMV[1];
+	m[2][1] = upMV[2];
+
+	m[0][2] = -forwardMV[0];
+	m[1][2] = -forwardMV[1];
+	m[2][2] = -forwardMV[2];
+
+	glMultMatrixf(&m[0][0]);
+	glTranslated(-eye[0], -eye[1], -eye[2]);
+
 }
 
 #pragma warning(pop)
