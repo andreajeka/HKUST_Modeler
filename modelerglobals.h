@@ -10,7 +10,7 @@
 // of the controls from the user interface.
 enum SampleModelControls
 {
-	XPOS, YPOS, ZPOS, TAILMOVEMENT, NUMCONTROLS
+	XPOS, YPOS, ZPOS, TAILMOVEMENT, METABALLSKIN, NUMCONTROLS
 };
 
 // body size

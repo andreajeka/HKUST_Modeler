@@ -8,6 +8,8 @@
 
 #include "modelerglobals.h"
 
+#include "metaball.h"
+
 // To make a SampleModel, we inherit off of ModelerView
 class SampleModel : public ModelerView
 {
@@ -94,6 +96,14 @@ void SampleModel::draw()
 	drawLeftFeet();
 
 	drawTail(); // handle the positioning and hierachical modeling of the tail
+
+	if (VAL(METABALLSKIN)) {
+		MetaBalls mb;
+		mb.setUpGrid();
+		mb.setUpMetaballs();
+		mb.evalScalarField();
+		mb.draw();
+	}
 
 	glPopMatrix();
 }
@@ -340,6 +350,7 @@ int main()
 	controls[YPOS] = ModelerControl("Y Position", 0, 5, 0.1f, 0);
 	controls[ZPOS] = ModelerControl("Z Position", -5, 5, 0.1f, 0);
 	controls[TAILMOVEMENT] = ModelerControl("Tail Movement", 0, 100, 1, 0);
+	controls[METABALLSKIN] = ModelerControl("Metaball Skin", 0, 1, 1, 0);
 
 	ModelerApplication::Instance()->Init(&createSampleModel, controls, NUMCONTROLS);
 	return ModelerApplication::Instance()->Run();
