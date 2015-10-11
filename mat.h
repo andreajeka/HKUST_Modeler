@@ -381,14 +381,46 @@ inline void swap(Mat3<T>& a, Mat3<T>& b) {
 
 template <class T>
 inline Mat4<T> Mat4<T>::createRotation( T angle, float x, float y, float z ) {
+	Vec3f vector(x, y, z);
+	if (!vector.iszero())
+	{
+		vector.normalize();
+	}
+
+	const float rad = angle * M_PI / 180.0f;
+	const float rad_x = rad * vector[0];
+	const float rad_y = rad * vector[1];
+	const float rad_z = rad * vector[2];
+
 	Mat4<T> rot;
+	rot.n[0] = cos(rad_y) * cos(rad_z);
+	rot.n[1] = cos(rad_z) * sin(rad_x) * sin(rad_y)
+		- cos(rad_x) * sin(rad_z);
+	rot.n[2] = cos(rad_x) * cos(rad_z) * sin(rad_y)
+		+ sin(rad_x) * sin(rad_z);
+
+	rot.n[4] = cos(rad_y) * sin(rad_z);
+	rot.n[5] = cos(rad_x) * cos(rad_z)
+		+ sin(rad_x) * sin(rad_y) * sin(rad_z);
+	rot.n[6] = cos(rad_x) * sin(rad_y) * sin(rad_z)
+		- cos(rad_z) * sin(rad_x);
+
+	rot.n[8] = -sin(rad_y);
+	rot.n[9] = cos(rad_y) * sin(rad_x);
+	rot.n[10] = cos(rad_x) * cos(rad_y);
+
+	rot.n[15] = 1;
+
 
 	return rot;
 }
 
 template <class T>
 inline Mat4<T> Mat4<T>::createTranslation( T x, T y, T z ) {
-	Mat4<T> trans;
+	Mat4<T> trans = createScale(1,1,1);
+	trans.n[3] = x;
+	trans.n[7] = y;
+	trans.n[11] = z;
 
 	return trans;
 }
@@ -396,13 +428,17 @@ inline Mat4<T> Mat4<T>::createTranslation( T x, T y, T z ) {
 template <class T>
 inline Mat4<T> Mat4<T>::createScale( T sx, T sy, T sz ) {
 	Mat4<T> scale;
+	scale.n[0] = sx;
+	scale.n[5] = sy;
+	scale.n[10] = sz;
+	scale.n[15] = 1;
 
 	return scale;
 }
 
 template <class T>
 inline Mat4<T> Mat4<T>::createShear( T shx, T shy, T shz ) {
-	Mat4<T> shear;
+	Mat4<T> shear = createScale(1, 1, 1);;
 	
 	return shear;
 }

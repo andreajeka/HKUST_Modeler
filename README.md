@@ -10,7 +10,9 @@ where eye, at and up are each 3 element arrays that specify the position of the 
 You are required to complete two bells (or equivalent) from the list below. Feel free to come up with your own ideas and pass them by us. If they're cool, we'll count them as bells and whistles.
 
 Other than these requirements, you have complete artistic freedom on this, so be creative!
-[x] BASIC REQUIREMENTS
+
+1. [x] BASIC REQUIREMENTS
+
 #####Bells and Whistles (Extra features for extra points):
 One bell is worth two whistles.
 
