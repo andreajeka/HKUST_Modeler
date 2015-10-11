@@ -1,6 +1,8 @@
 #ifndef __MATRIX_HEADER__
 #define __MATRIX_HEADER__
 
+#include <cmath>
+
 //==========[ Forward References ]=============================================
 
 template <class T> class Vec;

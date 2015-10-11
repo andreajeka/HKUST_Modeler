@@ -15,6 +15,7 @@ enum SampleModelControls
 	ZPOS, 
 	TAILMOVEMENT, 
 	METABALLSKIN,
+	TEXTURESKIN,
 	NUMCONTROLS
 };
 

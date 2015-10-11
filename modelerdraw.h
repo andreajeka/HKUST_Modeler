@@ -80,6 +80,9 @@ void closeRayFile();
 // Draw a sphere of radius r
 void drawSphere(double r);
 
+// Draw a texture spehere of radius r
+void drawTextureSphere(double r);
+
 // Draw an axis-aligned box from origin to (x,y,z)
 void drawBox( double x, double y, double z );
 
@@ -88,6 +91,9 @@ void drawTextureBox( double x, double y, double z );
 
 // Draw a cylinder from z=0 to z=h with radius r1 at origin and r2 at z=h
 void drawCylinder( double h, double r1, double r2 );
+
+// Draw a texture cylinder from z=0 to z=h with radius r1 at origin and r2 at z=h
+void drawTextureCylinder(double h, double r1, double r2);
 
 // Driangle with three given vertices.  Specify in counterclockwise direction
 void drawTriangle( double x1, double y1, double z1,
