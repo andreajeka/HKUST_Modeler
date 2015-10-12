@@ -8,6 +8,7 @@
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
+#include <iostream>
 
 // CLASS ModelerControl METHODS
 
@@ -178,4 +179,9 @@ void ModelerApplication::RedrawLoop(void*)
 
 	// 1/50 second update is good enough
 	Fl::add_timeout(0.025, ModelerApplication::RedrawLoop, NULL);
+}
+
+bool ModelerApplication::GetAnimation() {
+	std::cout << m_animating;
+	return m_animating;
 }

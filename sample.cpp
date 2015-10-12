@@ -10,6 +10,8 @@
 
 #include "metaball.h"
 
+#define PI 3.14159265
+
 // To make a SampleModel, we inherit off of ModelerView
 class SampleModel : public ModelerView
 {
@@ -18,6 +20,15 @@ public:
 	virtual void draw();
 
 private:
+	int iterator = 0;
+	bool animate = false;
+	
+	int animUpperArmAngle;
+	int animUpperLegAngle;
+	int animLowerLegAngle;
+	int animLeftFootAngle;
+	int animRightFootAngle;
+
 	void drawHead();
 	void drawNeck();
 
@@ -37,14 +48,16 @@ private:
 	void drawRightLegJoint();
 	void drawUpperRightLeg();
 	void drawLowerRightLeg();
-	void drawRightFeet();
+	void drawRightFoot();
 
 	void drawLeftLegJoint();
 	void drawUpperLeftLeg();
 	void drawLowerLeftLeg();
-	void drawLeftFeet();
+	void drawLeftFoot();
 
 	void drawTail();
+
+	void animationIterator();
 };
 
 // We need to make a creator function, mostly because of
@@ -65,35 +78,52 @@ void SampleModel::draw()
 
 	// draw the sample model
 	setAmbientColor(.1f, .1f, .1f);
-	setDiffuseColor(COLOR_GREEN);
+	setDiffuseColor(.940f, .816f, .811f);
+
+	animate = ModelerApplication::Instance()->GetAnimation();
+	if (animate)
+		animationIterator();
+
 	glPushMatrix(); // push identity
 	glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS)); // values set by the sliders
 
 	drawHead();
 	drawNeck();
 
+	setDiffuseColor(COLOR_GREEN);
 	drawUpperTorso();
 	drawLowerTorso();
 
+	setDiffuseColor(.940f, .816f, .811f);
 	drawRightHandJoint();
+	glPushMatrix();
+	if (animate)
+		glRotated(animUpperArmAngle, 1.0, 0, 0);
 	drawUpperRightHand();
 	drawLowerRightHand();
 	drawRightHand();
+	glPopMatrix();
+
 
 	drawLeftHandJoint();
+	glPushMatrix();
+	if (animate)
+		glRotated(-animUpperArmAngle, 1.0, 0, 0);
 	drawUpperLeftHand();
 	drawLowerLeftHand();
 	drawLeftHand();
+	glPopMatrix();
+
 
 	drawRightLegJoint();
 	drawUpperRightLeg();
 	drawLowerRightLeg();
-	drawRightFeet();
+	drawRightFoot();
 
 	drawLeftLegJoint();
 	drawUpperLeftLeg();
 	drawLowerLeftLeg();
-	drawLeftFeet();
+	drawLeftFoot();
 
 	drawTail(); // handle the positioning and hierachical modeling of the tail
 
@@ -263,34 +293,45 @@ void SampleModel::drawUpperRightLeg() {
 		drawTextureSphere(0.3);
 	else drawSphere(0.3);
 
-	glTranslated(0, -0.7, 0);
-	glRotated(90, 1.0, 0.0, 0.0);
-	glTranslated(0, 0, -0.6);
-	if (VAL(TEXTURESKIN))
-		drawTextureCylinder(1.2, 0.35, 0.35);
-	else drawCylinder(1.2, 0.35, 0.35);
-	glPopMatrix();
-}
-void SampleModel::drawLowerRightLeg(){
-	glPushMatrix();
-	glTranslated(0.9, -UPPER_TORSO_RADIUS - LOWER_TORSO_HEIGHT - 0.7 - 0.7, 0);
-	if (VAL(TEXTURESKIN))
-		drawTextureSphere(0.3);
-	else drawSphere(0.3);
+	if (animate)
+		glRotated(-animUpperLegAngle, 1.0, 0, 0);
 
 	glTranslated(0, -0.7, 0);
 	glRotated(90, 1.0, 0.0, 0.0);
 	glTranslated(0, 0, -0.6);
+	if (VAL(TEXTURESKIN)) {
+		drawTextureCylinder(1.2, 0.35, 0.35);
+		glTranslated(0, 0, 1.25);
+		drawTextureSphere(0.3);
+	}
+	else {
+		drawCylinder(1.2, 0.35, 0.35);
+		glTranslated(0, 0, 1.25);
+		drawSphere(0.3);
+	}
+	glPopMatrix();
+}
+void SampleModel::drawLowerRightLeg(){
+	glPushMatrix();
+	if (animate)
+		glRotated(animLowerLegAngle, 1.0, 0, 0);
+	glTranslated(0.9, -UPPER_TORSO_RADIUS - LOWER_TORSO_HEIGHT - 0.7 - 0.7 - 0.7, 0);
+	glRotated(90, 1.0, 0.0, 0.0);
+	glTranslated(0, 0, -0.7);
 	if (VAL(TEXTURESKIN))
 		drawTextureCylinder(1.4, 0.35, 0.25);
 	else drawCylinder(1.4, 0.35, 0.25);
 	glPopMatrix();
 }
-void SampleModel::drawRightFeet() {
+void SampleModel::drawRightFoot() {
 	glPushMatrix();
+	if (animate)
+		glRotated(animLowerLegAngle, 1.0, 0, 0);
 	glTranslated(0.9 + 0.2, -UPPER_TORSO_RADIUS - LOWER_TORSO_HEIGHT - 0.7 - 0.7 - 1.3, 0.4);
 	glRotated(30, 0.0, 1.0, 0.0);
 	glTranslated(0, 0, -0.3);
+	if (animate)
+		glRotated(animRightFootAngle, 1.0, 0, 0);
 	if (VAL(TEXTURESKIN))
 		drawTextureCylinder(0.6, 0.25, 0.1);
 	else drawCylinder(0.6, 0.25, 0.1);
@@ -314,34 +355,45 @@ void SampleModel::drawUpperLeftLeg() {
 		drawTextureSphere(0.3);
 	else drawSphere(0.3);
 
+	if (animate) 
+		glRotated(animUpperLegAngle, 1.0, 0, 0);
+	
 	glTranslated(0, -0.7, 0);
 	glRotated(90, 1.0, 0.0, 0.0);
 	glTranslated(0, 0, -0.6);
-	if (VAL(TEXTURESKIN))
+	if (VAL(TEXTURESKIN)) {
 		drawTextureCylinder(1.2, 0.35, 0.35);
-	else drawCylinder(1.2, 0.35, 0.35);
+		glTranslated(0, 0, 1.25);
+		drawTextureSphere(0.3);
+	}
+	else {
+		drawCylinder(1.2, 0.35, 0.35);
+		glTranslated(0, 0, 1.25);
+		drawSphere(0.3);
+	}
 	glPopMatrix();
 }
 void SampleModel::drawLowerLeftLeg() {
 	glPushMatrix();
-	glTranslated(-0.9, -UPPER_TORSO_RADIUS - LOWER_TORSO_HEIGHT - 0.7 - 0.7, 0);
-	if (VAL(TEXTURESKIN))
-		drawTextureSphere(0.3);
-	else drawSphere(0.3);
-
-	glTranslated(0, -0.7, 0);
+	if (animate)
+		glRotated(-animLowerLegAngle, 1.0, 0, 0);
+	glTranslated(-0.9, -UPPER_TORSO_RADIUS - LOWER_TORSO_HEIGHT - 0.7 - 0.7 - 0.7, 0);
 	glRotated(90, 1.0, 0.0, 0.0);
-	glTranslated(0, 0, -0.6);
+	glTranslated(0, 0, -0.7);
 	if (VAL(TEXTURESKIN))
 		drawTextureCylinder(1.4, 0.35, 0.25);
 	else drawCylinder(1.4, 0.35, 0.25);
 	glPopMatrix();
 }
-void SampleModel::drawLeftFeet() {
+void SampleModel::drawLeftFoot() {
 	glPushMatrix();
+	if (animate)
+		glRotated(-animLowerLegAngle, 1.0, 0, 0);
 	glTranslated(-0.9 - 0.2, -UPPER_TORSO_RADIUS - LOWER_TORSO_HEIGHT - 0.7 - 0.7 - 1.3, 0.4);
 	glRotated(30, 0.0, -1.0, 0.0);
 	glTranslated(0, 0, -0.3);
+	if (animate)
+		glRotated(animLeftFootAngle, 1.0, 0, 0);
 	if (VAL(TEXTURESKIN))
 		drawTextureCylinder(0.6, 0.25, 0.1);
 	else drawCylinder(0.6, 0.25, 0.1);
@@ -411,6 +463,53 @@ void SampleModel::drawTail() {
 		drawTextureCylinder(0.6, 0.1, 0.1);
 	else drawCylinder(0.6, 0.1, 0.1);
 	glPopMatrix();
+}
+
+void SampleModel::animationIterator() {
+	if (iterator == 60) {
+		iterator = 0;
+	}
+	//	printf("%d \n", iterator);
+	if (iterator < 15) {
+		animUpperLegAngle = -(iterator + 1) * 2;
+		animUpperArmAngle = animUpperLegAngle / 4;
+		if (iterator % 2 == 0)
+			animLowerLegAngle = (iterator + 1 - 1);
+		animLeftFootAngle = -iterator / 3;
+		animRightFootAngle = (60 - iterator) / 2 + 10;
+		++iterator;
+		return;
+	}
+	else if (iterator < 30) {
+		animUpperLegAngle = -(30 - iterator) * 2;
+		animUpperArmAngle = animUpperLegAngle / 4;
+		if (iterator % 2 == 0)
+			animLowerLegAngle = (30 - iterator - 1);
+		animLeftFootAngle = -iterator/3 + 10;
+		animRightFootAngle = (45 - iterator) / 3 + 10;
+		++iterator;
+		return;
+	}
+	else if (iterator < 45) {
+		animUpperLegAngle = (iterator - 29) * 2;
+		animUpperArmAngle = animUpperLegAngle / 4;
+		if (iterator % 2 == 0)
+			animLowerLegAngle = -(iterator - 29 - 1);
+		animLeftFootAngle = iterator/3 + 10;
+		animRightFootAngle = (30 - iterator) / 3 + 10;
+		++iterator;
+		return;
+	}
+	else if (iterator < 60) {
+		animUpperLegAngle = (60 - iterator) * 2;
+		animUpperArmAngle = animUpperLegAngle / 4;
+		if (iterator % 2 == 0)
+			animLowerLegAngle = -(60 - iterator - 1);
+		animLeftFootAngle = iterator/2 + 10;
+		animRightFootAngle = (15 -iterator) / 3;
+		++iterator;
+		return;
+	}
 }
 
 int main()
