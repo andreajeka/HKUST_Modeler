@@ -469,7 +469,7 @@ void SampleModel::animationIterator() {
 	if (iterator == 60) {
 		iterator = 0;
 	}
-	//	printf("%d \n", iterator);
+
 	if (iterator < 15) {
 		animUpperLegAngle = -(iterator + 1) * 2;
 		animUpperArmAngle = animUpperLegAngle / 4;

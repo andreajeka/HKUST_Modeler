@@ -8,7 +8,6 @@
 #include <cstring>
 #include <cstdio>
 #include <cstdlib>
-#include <iostream>
 
 // CLASS ModelerControl METHODS
 
@@ -182,6 +181,5 @@ void ModelerApplication::RedrawLoop(void*)
 }
 
 bool ModelerApplication::GetAnimation() {
-	std::cout << m_animating;
 	return m_animating;
 }

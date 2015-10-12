@@ -22,11 +22,11 @@ One bell is worth two whistles.
 
 3. [ ] ![whistle](http://i.imgur.com/VYSixYv.gif) Come up with another whistle and implement it.  A whistle is something that extends the use of one of the things you are already doing.  It is part of the basic model construction, but extended or cloned and modified in an interesting way.
 
-4. [ ] ![bell](http://i.imgur.com/HJ7cCdM.gif) Use a texture map on all or part of your character. (The safest way to do this is to implement your own primitives inside your model file that do texture mapping.)
+4. [x] ![bell](http://i.imgur.com/HJ7cCdM.gif) Use a texture map on all or part of your character. (The safest way to do this is to implement your own primitives inside your model file that do texture mapping.)
 
 5. [ ] ![bell](http://i.imgur.com/HJ7cCdM.gif) Build a complex shape as a set of polygonal faces, using the "triangle" primitive to render them.
 
-6. [ ] ![bell](http://i.imgur.com/HJ7cCdM.gif) Make an additional "animated" sequence your character can perform.  Although you can try to use a timed callback "add_idle" (see here for more information), an easier solution is just to increment values each time your model's draw() function is called. If you use the menu option to turn on animation, your draw() function will be executed at around 30 times per second.
+6. [x] ![bell](http://i.imgur.com/HJ7cCdM.gif) Make an additional "animated" sequence your character can perform.  Although you can try to use a timed callback "add_idle" (see here for more information), an easier solution is just to increment values each time your model's draw() function is called. If you use the menu option to turn on animation, your draw() function will be executed at around 30 times per second.
 
 7. [ ] ![bell](http://i.imgur.com/HJ7cCdM.gif) Add some widgets that control adjustable parameters to your model so that you can create individual-looking instances of your character.  Try to make these actually different individuals, not just "the red guy" and "the blue guy."
 
