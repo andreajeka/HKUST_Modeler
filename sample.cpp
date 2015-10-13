@@ -23,6 +23,7 @@ private:
 	int iterator = 0;
 	bool animate = false;
 	
+	int animHeadAngle;
 	int animUpperArmAngle;
 	int animUpperLegAngle;
 	int animLowerLegAngle;
@@ -87,6 +88,8 @@ void SampleModel::draw()
 	glPushMatrix(); // push identity
 	glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS)); // values set by the sliders
 
+	if (animate)
+		glRotated(animHeadAngle, 0.0, 1.0, 0.0);
 	setDiffuseColor(.940f, .816f, .811f);
 	drawHead();
 	
@@ -510,6 +513,7 @@ void SampleModel::animationIterator() {
 	}
 
 	if (iterator < 15) {
+		animHeadAngle = iterator;
 		animUpperLegAngle = -(iterator + 1) * 2;
 		animUpperArmAngle = animUpperLegAngle / 3.5;
 		if (iterator % 2 == 0)
@@ -520,6 +524,7 @@ void SampleModel::animationIterator() {
 		return;
 	}
 	else if (iterator < 30) {
+		animHeadAngle = iterator;
 		animUpperLegAngle = -(30 - iterator) * 2;
 		animUpperArmAngle = animUpperLegAngle / 3.5;
 		if (iterator % 2 == 0)
@@ -530,6 +535,7 @@ void SampleModel::animationIterator() {
 		return;
 	}
 	else if (iterator < 45) {
+		animHeadAngle = -iterator;
 		animUpperLegAngle = (iterator - 29) * 2;
 		animUpperArmAngle = animUpperLegAngle / 3.5;
 		if (iterator % 2 == 0)
@@ -540,6 +546,7 @@ void SampleModel::animationIterator() {
 		return;
 	}
 	else if (iterator < 60) {
+		animHeadAngle = -iterator;
 		animUpperLegAngle = (60 - iterator) * 2;
 		animUpperArmAngle = animUpperLegAngle / 3.5;
 		if (iterator % 2 == 0)
