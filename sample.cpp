@@ -30,6 +30,7 @@ private:
 	int animRightFootAngle;
 
 	void drawHead();
+	void drawFace();
 	void drawNeck();
 
 	void drawUpperTorso();
@@ -78,7 +79,6 @@ void SampleModel::draw()
 
 	// draw the sample model
 	setAmbientColor(.1f, .1f, .1f);
-	setDiffuseColor(.940f, .816f, .811f);
 
 	animate = ModelerApplication::Instance()->GetAnimation();
 	if (animate)
@@ -87,7 +87,13 @@ void SampleModel::draw()
 	glPushMatrix(); // push identity
 	glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS)); // values set by the sliders
 
+	setDiffuseColor(.940f, .816f, .811f);
 	drawHead();
+	
+	setDiffuseColor(0, 0, 0);
+	drawFace();
+
+	setDiffuseColor(.940f, .816f, .811f);
 	drawNeck();
 
 	setDiffuseColor(COLOR_GREEN);
@@ -146,6 +152,39 @@ void SampleModel::drawHead() {
 	else drawSphere(HEAD_RADIUS);
 	glPopMatrix();
 }
+
+void SampleModel::drawFace() {
+	glPushMatrix();
+	
+	// eyes
+	glTranslated(0.2, UPPER_TORSO_RADIUS + HEAD_RADIUS + 0.3, 0.7);
+	if (VAL(TEXTURESKIN))
+		drawTextureSphere(0.1);
+	else drawSphere(0.1);
+	glTranslated(-0.4, 0, 0);
+	if (VAL(TEXTURESKIN))
+		drawTextureSphere(0.1);
+	else drawSphere(0.1);
+
+	// nose
+	setDiffuseColor(.940f, .816f, .811f);
+	glTranslated( 0.2, -0.3, 0.1);
+	if (VAL(TEXTURESKIN))
+		drawTextureSphere(0.1);
+	else drawSphere(0.1);
+	glPopMatrix();
+
+	// mouth
+	setDiffuseColor(1.0,0,0);
+	glTranslated(-0.25, UPPER_TORSO_RADIUS + 0.3, 0.7);
+	glRotated(20, 1.0, 0.0, 0.0);
+	glTranslated(0.0, 0.0, -0.05);
+	if (VAL(TEXTURESKIN))
+		drawTextureBox(0.5,0.3,0);
+	else drawBox(0.5,0.3,0);
+	glPopMatrix();
+}
+
 void SampleModel::drawNeck() {
 	glPushMatrix();
 	glTranslated(0, UPPER_TORSO_RADIUS + 0.1, 0);
@@ -472,7 +511,7 @@ void SampleModel::animationIterator() {
 
 	if (iterator < 15) {
 		animUpperLegAngle = -(iterator + 1) * 2;
-		animUpperArmAngle = animUpperLegAngle / 4;
+		animUpperArmAngle = animUpperLegAngle / 3.5;
 		if (iterator % 2 == 0)
 			animLowerLegAngle = (iterator + 1 - 1);
 		animLeftFootAngle = -iterator / 3;
@@ -482,7 +521,7 @@ void SampleModel::animationIterator() {
 	}
 	else if (iterator < 30) {
 		animUpperLegAngle = -(30 - iterator) * 2;
-		animUpperArmAngle = animUpperLegAngle / 4;
+		animUpperArmAngle = animUpperLegAngle / 3.5;
 		if (iterator % 2 == 0)
 			animLowerLegAngle = (30 - iterator - 1);
 		animLeftFootAngle = -iterator/3 + 10;
@@ -492,7 +531,7 @@ void SampleModel::animationIterator() {
 	}
 	else if (iterator < 45) {
 		animUpperLegAngle = (iterator - 29) * 2;
-		animUpperArmAngle = animUpperLegAngle / 4;
+		animUpperArmAngle = animUpperLegAngle / 3.5;
 		if (iterator % 2 == 0)
 			animLowerLegAngle = -(iterator - 29 - 1);
 		animLeftFootAngle = iterator/3 + 10;
@@ -502,7 +541,7 @@ void SampleModel::animationIterator() {
 	}
 	else if (iterator < 60) {
 		animUpperLegAngle = (60 - iterator) * 2;
-		animUpperArmAngle = animUpperLegAngle / 4;
+		animUpperArmAngle = animUpperLegAngle / 3.5;
 		if (iterator % 2 == 0)
 			animLowerLegAngle = -(60 - iterator - 1);
 		animLeftFootAngle = iterator/2 + 10;

@@ -69,6 +69,15 @@ public:
     inline Vec3f getLookAt() const
     { return mLookAt; }
     
+	inline void setPosition()
+	{
+		mElevation = mAzimuth = mTwist = 0.0f;
+		mDolly = -50.0f;
+		mElevation = 0.2f;
+		mAzimuth = (float)3.1415926;
+
+		mLookAt = Vec3f(0, 0, 0); mDirtyTransform = true;
+	}
     //---[ Interactive Adjustment ]------------------------
     // these should be used from a mouse event handling routine that calls
     // the startX method on a mouse down, updateX on mouse move and finally

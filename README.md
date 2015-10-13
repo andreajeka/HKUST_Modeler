@@ -30,7 +30,7 @@ One bell is worth two whistles.
 
 7. [ ] ![bell](http://i.imgur.com/HJ7cCdM.gif) Add some widgets that control adjustable parameters to your model so that you can create individual-looking instances of your character.  Try to make these actually different individuals, not just "the red guy" and "the blue guy."
 
-8. [ ] ![bell](http://i.imgur.com/HJ7cCdM.gif)Add a "Frame All" feature that would change the position of the camera such that your model is entirely visible in the model window, regardless of the pose and location of your model.
+8. [x] ![bell](http://i.imgur.com/HJ7cCdM.gif)Add a "Frame All" feature that would change the position of the camera such that your model is entirely visible in the model window, regardless of the pose and location of your model.
 
 9. [ ] ![bell+whistle](http://i.imgur.com/BxHJUfG.gif)The camera code has a constrained up vector -- modify the code to (1) handle camera twists (the framework is already there) and (2) to come up with an intuitive way for the user to twist the camera via mouse control.
 
