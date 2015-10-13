@@ -7,6 +7,7 @@
 // For texture mapping
 #define checkImageWidth 64
 #define checkImageHeight 64
+#define PI 3.14159265
 static GLubyte checkImage[checkImageHeight][checkImageWidth][4];
 //static GLubyte otherImage[checkImageHeight][checkImageWidth][4];
 
@@ -564,6 +565,79 @@ void drawTriangle( double x1, double y1, double z1,
         glEnd();
     }
 }
+
+void drawTorus(float R, float r)
+{
+	ModelerDrawState *mds = ModelerDrawState::Instance();
+
+	_setupOpenGl();
+
+	if (mds->m_rayFile)
+	{
+		_dump_current_modelview();
+		fprintf(mds->m_rayFile,
+			"what the fuck is this");
+		_dump_current_material();
+		fprintf(mds->m_rayFile, "})))\n");
+	}
+	else
+	{
+		/* remember which matrix mode OpenGL was in. */
+		int savemode;
+		glGetIntegerv(GL_MATRIX_MODE, &savemode);
+
+		int n;
+
+		switch (mds->m_quality)
+		{
+		case HIGH:
+			n = 32; break;
+		case MEDIUM:
+			n = 20; break;
+		case LOW:
+			n = 12; break;
+		case POOR:
+			n = 8; break;
+		}
+
+		int N = 2 * n;
+		glMatrixMode(GL_MODELVIEW);
+		glPushMatrix();
+		glPushAttrib(GL_CURRENT_BIT);
+
+		for (int j = 0; j < N; j++)
+		{
+			glRotated(360.0f / N, 0, 1, 0);
+			float next_Cos = cos(2 * PI * (0 + 1) / N);
+			float next_Sin = sin(2 * PI * (0 + 1) / N);
+
+			glBindTexture(GL_TEXTURE_2D, 1);
+			glBegin(GL_TRIANGLE_STRIP);
+
+			for (int i = 0; i < n + 1; i++)
+			{
+				float Sin = sin(2 * PI * i / n);
+				float Cos = cos(2 * PI * i / n);
+				glNormal3d(Cos, Sin, 0);
+				glTexCoord2f(0.0f, 1.0f * i / n);
+				glVertex3d(R + Cos * r, Sin * r, 0);
+
+				glNormal3d(Cos * next_Cos, Sin, Cos * next_Sin);
+				glTexCoord2f(1.0f, 1.0f * i / n);
+				glVertex3d(next_Cos * R + Cos * r * next_Cos, Sin * r, next_Sin * R + Cos * r * next_Sin);
+			}
+
+			glEnd();
+		}
+
+		/* restore the model matrix stack, and switch back to the matrix
+		mode we were in. */
+		glPopMatrix();
+		glPopAttrib();
+		glMatrixMode(savemode);
+	}
+}
+
 
 
 

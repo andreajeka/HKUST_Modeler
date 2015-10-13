@@ -30,6 +30,7 @@ private:
 	int animLeftFootAngle;
 	int animRightFootAngle;
 
+	void drawFancyHair();
 	void drawHead();
 	void drawFace();
 	void drawNeck();
@@ -88,8 +89,12 @@ void SampleModel::draw()
 	glPushMatrix(); // push identity
 	glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS)); // values set by the sliders
 
+	setDiffuseColor(0.97, 0.73, 0.156);
 	if (animate)
 		glRotated(animHeadAngle, 0.0, 1.0, 0.0);
+	if (VAL(HAIR_PLEASE))
+		drawFancyHair();
+
 	setDiffuseColor(.940f, .816f, .811f);
 	drawHead();
 	
@@ -144,6 +149,13 @@ void SampleModel::draw()
 		mb.draw();
 	}
 
+	glPopMatrix();
+}
+
+void SampleModel::drawFancyHair() {
+	glPushMatrix();
+	glTranslated(0, UPPER_TORSO_RADIUS + HEAD_RADIUS + 1.1, 0);
+	drawTorus(0.5, 0.8);
 	glPopMatrix();
 }
 
@@ -569,6 +581,7 @@ int main()
 	controls[TAILMOVEMENT] = ModelerControl("Tail Movement", 0, 100, 1, 0);
 	controls[METABALLSKIN] = ModelerControl("Metaball Skin", 0, 1, 1, 0);
 	controls[TEXTURESKIN] = ModelerControl("Texture Skin", 0, 1, 1, 0);
+	controls[HAIR_PLEASE] = ModelerControl("Hair Please", 0, 1, 1, 0);
 
 	ModelerApplication::Instance()->Init(&createSampleModel, controls, NUMCONTROLS);
 	return ModelerApplication::Instance()->Run();

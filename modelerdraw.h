@@ -95,9 +95,11 @@ void drawCylinder( double h, double r1, double r2 );
 // Draw a texture cylinder from z=0 to z=h with radius r1 at origin and r2 at z=h
 void drawTextureCylinder(double h, double r1, double r2);
 
-// Driangle with three given vertices.  Specify in counterclockwise direction
+// Draw triangle with three given vertices.  Specify in counterclockwise direction
 void drawTriangle( double x1, double y1, double z1,
 			       double x2, double y2, double z2,
 			       double x3, double y3, double z3 );
 
+// Draw Torus
+void drawTorus(float R, float r);
 #endif
