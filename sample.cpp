@@ -187,16 +187,20 @@ void SampleModel::drawFace() {
 	if (VAL(TEXTURESKIN))
 		drawTextureSphere(0.1);
 	else drawSphere(0.1);
+
 	glPopMatrix();
 
 	// mouth
-	setDiffuseColor(1.0,0,0);
+	glPushMatrix();
+
+	setDiffuseColor(1.0f, 0.0f, 0.0f);
 	glTranslated(-0.25, UPPER_TORSO_RADIUS + 0.3, 0.7);
 	glRotated(20, 1.0, 0.0, 0.0);
 	glTranslated(0.0, 0.0, -0.05);
 	if (VAL(TEXTURESKIN))
 		drawTextureBox(0.5,0.3,0);
 	else drawBox(0.5,0.3,0);
+
 	glPopMatrix();
 }
 
