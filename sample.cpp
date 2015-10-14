@@ -61,6 +61,8 @@ private:
 	void drawTail();
 
 	void animationIterator();
+
+	void drawShell();
 };
 
 // We need to make a creator function, mostly because of
@@ -89,26 +91,33 @@ void SampleModel::draw()
 	glPushMatrix(); // push identity
 	glTranslated(VAL(XPOS), VAL(YPOS), VAL(ZPOS)); // values set by the sliders
 
-	setDiffuseColor(0.97, 0.73, 0.156);
+	if (VAL(NINJATURTLE))
+		setDiffuseColor(COLOR_GREEN);
+	else
+		setDiffuseColor(0.97, 0.73, 0.156);
+
 	if (animate)
 		glRotated(animHeadAngle, 0.0, 1.0, 0.0);
 	if (VAL(HAIR_PLEASE))
 		drawFancyHair();
 
-	setDiffuseColor(.940f, .816f, .811f);
+	if (!VAL(NINJATURTLE))
+		setDiffuseColor(.940f, .816f, .811f);
 	drawHead();
 	
-	setDiffuseColor(0, 0, 0);
-	drawFace();
+	if (!VAL(NINJATURTLE)) {
+		setDiffuseColor(0, 0, 0);
+		drawFace();
+		setDiffuseColor(.940f, .816f, .811f);
+		drawNeck();
+		setDiffuseColor(COLOR_GREEN);
+	}
 
-	setDiffuseColor(.940f, .816f, .811f);
-	drawNeck();
-
-	setDiffuseColor(COLOR_GREEN);
 	drawUpperTorso();
 	drawLowerTorso();
 
-	setDiffuseColor(.940f, .816f, .811f);
+	if (!VAL(NINJATURTLE))
+		setDiffuseColor(.940f, .816f, .811f);
 	drawRightHandJoint();
 	glPushMatrix();
 	if (animate)
@@ -138,8 +147,11 @@ void SampleModel::draw()
 	drawUpperLeftLeg();
 	drawLowerLeftLeg();
 	drawLeftFoot();
-
-	drawTail(); // handle the positioning and hierachical modeling of the tail
+	
+	if (VAL(NINJATURTLE))
+		drawShell();
+	else
+		drawTail(); // handle the positioning and hierachical modeling of the tail
 
 	if (VAL(METABALLSKIN)) {
 		MetaBalls mb;
@@ -574,6 +586,140 @@ void SampleModel::animationIterator() {
 	}
 }
 
+void SampleModel::drawShell() {
+	// draw the front
+	setDiffuseColor(251.0 / 255, 193.0 / 255, 86.0 / 255);
+	drawTriangle(0, 0.4 + 0.8, 1.0, 
+				 0, 0.4, 1.3, 
+				 1.1, 0.4 + 0.8 - 0.3, 0.7); // T1: top, bottom, right
+	drawTriangle(0, 0.4 + 0.8, 1.0,
+				 0, 0.4, 1.3,
+				 -1.1, 0.4 + 0.8 - 0.3, 0.7); // T2: top, bottom, left
+	drawTriangle(0, 0.4, 1.3,
+				 1.1, 0.4 + 0.8 - 0.3, 0.7,
+				 1.1, 0.4 + 0.8 - 0.3 - 0.8, 0.7); // T3: left, top, bottom
+	drawTriangle(0, 0.4, 1.3,
+				 -1.1, 0.4 + 0.8 - 0.3, 0.7,
+				 -1.1, 0.4 + 0.8 - 0.3 - 0.8, 0.7); // T4: right, top, bottom
+	drawTriangle(0, 0.4, 1.3,
+				 1.1, 0.4 + 0.8 - 0.3 - 0.8, 0.7,
+				 0, -1.0, 1.3); // T5: top, right, bottom
+	drawTriangle(0, 0.4, 1.3,
+				 -1.1, 0.4 + 0.8 - 0.3 - 0.8, 0.7,
+				 0, -1.0, 1.3); // T6: top, left, bottom
+	drawTriangle(1.1, 0.4 + 0.8 - 0.3 - 0.8, 0.7,
+				 0, -1.0, 1.3,
+				 1.1, -1.5, 0.7); // T7: top, left, right
+	drawTriangle(-1.1, 0.4 + 0.8 - 0.3 - 0.8, 0.7,
+				 0, -1.0, 1.3,
+				 -1.1, -1.5, 0.7); // T8: top, right, left
+	drawTriangle(0, -1.0, 1.3,
+				 0, -1.9, 1.0,
+				 1.1, -1.5, 0.7); // T9: top, bottom, right
+	drawTriangle(0, -1.0, 1.3,
+				 0, -1.9, 1.0,
+				 -1.1, -1.5, 0.7); // T10: top, bottom, left
+
+	// draw the back squares
+	setDiffuseColor(14.0 / 255, 130.0 / 255, 74.0 / 255);
+	drawTriangle(0.3, 0.7, -1.5,
+				 -0.3, 0.7, -1.5,
+				 0.3, 0.1, -1.5); // T11: left, right, bottom
+	drawTriangle(0.3, 0.1, -1.5,
+				 -0.3, 0.1, -1.5,
+				 -0.3, 0.7, -1.5); // T12: left, right, top
+	drawTriangle(0.3, 0.1, -1.5,
+				 -0.3, 0.1, -1.5,
+			 	 0.3, -0.5, -1.5); // T13: left, right, bottom
+	drawTriangle(0.3, -0.5, -1.5,
+				 -0.3, -0.5, -1.5,
+				 -0.3, 0.1, -1.5); // T14: left, right, top
+	drawTriangle(0.3, -0.5, -1.5,
+				 -0.3, -0.5, -1.5,
+				 0.3, -1.1, -1.5); // T15: left, right, bottom
+	drawTriangle(0.3, -1.1, -1.5,
+				 -0.3, -1.1, -1.5,
+				 -0.3, -0.5, -1.5); // T16: left, right, top
+
+	// draw the back top plates
+	drawTriangle(0.3, 0.7, -1.5,
+				 -0.3, 0.7, -1.5,
+				 0.0, 1.2, -0.7); // T17: left, right, top
+	drawTriangle(-0.3, 0.7, -1.5,
+				-1.3, 1.0, -0.7,
+				 0.0, 1.2, -0.7); // T18: left, right, top
+	drawTriangle(1.3, 1.0, -0.7,
+				 0.3, 0.7, -1.5,
+				 0.0, 1.2, -0.7); // T19: left, right, top
+
+	// draw the back bottom plates
+	drawTriangle(0.3, -1.1, -1.5,
+				-0.3, -1.1, -1.5,
+				 0.0, -1.6, -0.7); // T20: left, right, bottom
+	drawTriangle(-0.3, -1.1, -1.5,
+				-1.3, -1.3, -0.7,
+				0.0, -1.6, -0.7); // T21: left, right, bottom
+	drawTriangle(1.3, -1.5, -0.7,
+				 0.3, -1.1, -1.5,
+				 0.0, -1.6, -0.7); // T22: left, right, bottom
+
+	// draw the back side plates
+	drawTriangle(1.3, 1.0, -0.7,
+				 0.3, 0.7, -1.5,
+				 1.3, -1.5, -0.7); // T23: left, right, bottom
+	drawTriangle(1.3, -1.5, -0.7,
+				 0.3, -1.1, -1.5,
+				 0.3, 0.7, -1.5); // T24: left, right, top
+	drawTriangle(-0.3, 0.7, -1.5,
+				 -1.3, 1.0, -0.7,
+				 -1.3, -1.3, -0.7); // T25: left, right, bottom
+	drawTriangle(-0.3, -1.1, -1.5,
+				 -1.3, -1.3, -0.7,
+				 -0.3, 0.7, -1.5); // T26: left, right, top
+
+	// draw the sides
+	setDiffuseColor(140 / 255, 200.0 / 255, 65.0 / 255);
+	drawTriangle(0, 0.4 + 0.8, 1.0,
+				 1.1, 0.4 + 0.8 - 0.3, 0.7,
+				 1.3, 1.0, -0.7); // T27
+	drawTriangle(1.3, 1.0, -0.7,
+				 0.0, 1.2, -0.7,
+				 0, 0.4 + 0.8, 1.0); // T28
+	drawTriangle(0, 0.4 + 0.8, 1.0,
+				-1.1, 0.4 + 0.8 - 0.3, 0.7,
+				0.0, 1.2, -0.7); // T29
+	drawTriangle(-1.3, 1.0, -0.7,
+				 0.0, 1.2, -0.7,
+				 -1.1, 0.4 + 0.8 - 0.3, 0.7); // T30
+
+	drawTriangle(-1.3, 1.0, -0.7,
+				 -1.1, 0.4 + 0.8 - 0.3, 0.7,
+				 - 1.3, -1.3, -0.7); // T31
+	drawTriangle(-1.1, 0.4 + 0.8 - 0.3, 0.7,
+				-1.1, -1.5, 0.7,
+				-1.3, -1.3, -0.7); // T32
+
+	drawTriangle(1.3, -1.5, -0.7,
+				 0, -1.9, 1.0,
+				 1.1, -1.5, 0.7); // T33
+	drawTriangle(1.3, -1.5, -0.7,
+				 0.0, -1.6, -0.7,
+				 0, -1.9, 1.0); // T34
+	drawTriangle(-1.3, -1.3, -0.7,
+				0.0, -1.6, -0.7,
+				 0, -1.9, 1.0); // T35
+	drawTriangle(0, -1.9, 1.0,
+				 -1.1, -1.5, 0.7,
+				 -1.3, -1.3, -0.7); // T36
+	drawTriangle(1.1, 0.4 + 0.8 - 0.3, 0.7,
+				 1.1, -1.5, 0.7,
+				 1.3, -1.5, -0.7); // T37
+	drawTriangle(1.3, 1.0, -0.7,
+				 1.1, 0.4 + 0.8 - 0.3, 0.7,
+				 1.3, -1.5, -0.7); // T38
+	
+}
+
 int main()
 {
 	// Initialize the controls
@@ -586,6 +732,7 @@ int main()
 	controls[METABALLSKIN] = ModelerControl("Metaball Skin", 0, 1, 1, 0);
 	controls[TEXTURESKIN] = ModelerControl("Texture Skin", 0, 1, 1, 0);
 	controls[HAIR_PLEASE] = ModelerControl("Hair Please", 0, 1, 1, 0);
+	controls[NINJATURTLE] = ModelerControl("Ninja Turtle", 0, 1, 1, 0);
 
 	ModelerApplication::Instance()->Init(&createSampleModel, controls, NUMCONTROLS);
 	return ModelerApplication::Instance()->Run();
