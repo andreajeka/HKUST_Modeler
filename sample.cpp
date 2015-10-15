@@ -323,7 +323,6 @@ void SampleModel::drawRightHand() {
 	glRotated(90, 1.0, 0.0, 0.0);
 	glTranslated(0, 0, -0.1);
 	glRotated(VAL(RIGHTHANDX), -1.0, 0, 0);
-	glRotated(VAL(RIGHTHANDZ), 0, 0, 1.0);
 	if (VAL(TEXTURESKIN))
 		drawTextureCylinder(0.4, 0.10, 0.05);
 	else drawCylinder(0.4, 0.10, 0.05);

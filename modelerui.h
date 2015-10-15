@@ -4,6 +4,8 @@
 #define modelerui_h
 #include <FL/Fl.H>
 #include <FL/Fl_Window.H>
+#include <FL/Fl_Button.H>
+#include <FL/Fl_Input.H>
 #include <FL/Fl_Menu_Bar.H>
 #include "modelerview.h"
 #include <FL/Fl_File_Chooser.H>
@@ -78,5 +80,20 @@ private:
 public:
   ModelerView *m_modelerView;
   void show();
+private:
+	Fl_Window* m_inverseKinematicsWindow;
+	Fl_Button* executeInverseKinematicsButton;
+	Fl_Input* LeftArmXInput;
+	Fl_Input* LeftArmYInput;
+	Fl_Input* LeftArmZInput;
+	//Fl_Input* leftLeg2XInput;
+	//Fl_Input* leftLeg2YInput;
+	//Fl_Input* leftLeg2ZInput;
+	//Fl_Input* rightLeg1XInput;
+	//Fl_Input* rightLeg1YInput;
+	//Fl_Input* rightLeg1ZInput;
+
+	static void cb_inverse_kinematics(Fl_Menu_*, void*);
+	static void cb_execute_inverse_kinematics(Fl_Widget* o, void* v);
 };
 #endif
