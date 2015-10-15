@@ -183,3 +183,7 @@ void ModelerApplication::RedrawLoop(void*)
 bool ModelerApplication::GetAnimation() {
 	return m_animating;
 }
+
+void ModelerApplication::SetAnimation(bool animation) {
+	m_animating = animation;
+}

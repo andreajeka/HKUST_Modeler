@@ -4,10 +4,10 @@
 #include "modelerapp.h"
 #include "modelerdraw.h"
 #include <FL/gl.h>
+#include <FL/Fl.H>
 #include <math.h>
 
 #include "modelerglobals.h"
-
 #include "metaball.h"
 
 #define PI 3.14159265
@@ -16,9 +16,13 @@
 class SampleModel : public ModelerView
 {
 public:
-	SampleModel(int x, int y, int w, int h, char *label) : ModelerView(x, y, w, h, label) { }
+	SampleModel(int x, int y, int w, int h, char *label) :
+		ModelerView(x, y, w, h, label)
+	{ 
+	
+	}
 	virtual void draw();
-
+	static SampleModel *instance;
 private:
 	int iterator = 0;
 	bool animate = false;
@@ -30,7 +34,7 @@ private:
 	int animLeftFootAngle;
 	int animRightFootAngle;
 
-	void drawFancyHair();
+	void drawEyeBandana();
 	void drawHead();
 	void drawFace();
 	void drawNeck();
@@ -63,7 +67,10 @@ private:
 	void animationIterator();
 
 	void drawShell();
+
 };
+
+SampleModel *SampleModel::instance = NULL;
 
 // We need to make a creator function, mostly because of
 // nasty API stuff that we'd rather stay away from.
@@ -94,12 +101,13 @@ void SampleModel::draw()
 	if (VAL(NINJATURTLE))
 		setDiffuseColor(COLOR_GREEN);
 	else
-		setDiffuseColor(0.97, 0.73, 0.156);
+		setDiffuseColor(.940f, .816f, .811f);
 
 	if (animate)
 		glRotated(animHeadAngle, 0.0, 1.0, 0.0);
-	if (VAL(HAIR_PLEASE))
-		drawFancyHair();
+
+	if (VAL(EYEBANDANA))
+		drawEyeBandana();
 
 	if (!VAL(NINJATURTLE))
 		setDiffuseColor(.940f, .816f, .811f);
@@ -110,7 +118,6 @@ void SampleModel::draw()
 		drawFace();
 		setDiffuseColor(.940f, .816f, .811f);
 		drawNeck();
-		setDiffuseColor(COLOR_GREEN);
 	}
 
 	drawUpperTorso();
@@ -137,17 +144,17 @@ void SampleModel::draw()
 	drawLeftHand();
 	glPopMatrix();
 
-
 	drawRightLegJoint();
+	drawLeftLegJoint();
+
 	drawUpperRightLeg();
 	drawLowerRightLeg();
 	drawRightFoot();
 
-	drawLeftLegJoint();
 	drawUpperLeftLeg();
 	drawLowerLeftLeg();
 	drawLeftFoot();
-	
+
 	if (VAL(NINJATURTLE))
 		drawShell();
 	else
@@ -164,11 +171,16 @@ void SampleModel::draw()
 	glPopMatrix();
 }
 
-void SampleModel::drawFancyHair() {
+void SampleModel::drawEyeBandana() {
+	setDiffuseColor(COLOR_RED);
 	glPushMatrix();
-	glTranslated(0, UPPER_TORSO_RADIUS + HEAD_RADIUS + 1.1, 0);
-	drawTorus(0.5, 0.8);
+	glTranslated(0, UPPER_TORSO_RADIUS + HEAD_RADIUS + 0.3, 0);
+	drawTorus(0.3, 0.5);
 	glPopMatrix();
+	if (VAL(NINJATURTLE))
+		setDiffuseColor(COLOR_GREEN);
+	else
+		setDiffuseColor(.940f, .816f, .811f);
 }
 
 void SampleModel::drawHead() {
@@ -253,41 +265,65 @@ void SampleModel::drawRightHandJoint() {
 		drawTextureCylinder(0.4, 0.2, 0.2);
 	else drawCylinder(0.4, 0.2, 0.2);
 	glPopMatrix();
-}
-void SampleModel::drawUpperRightHand() {
+
 	glPushMatrix();
 	glTranslated(UPPER_TORSO_RADIUS + 0.2, 0.8, 0);
 	if (VAL(TEXTURESKIN))
 		drawTextureSphere(0.4);
 	else drawSphere(0.4);
+	glPopMatrix();
+}
+void SampleModel::drawUpperRightHand() {
+	glPushMatrix();
+	glTranslated(UPPER_TORSO_RADIUS + 0.2, 0.8, 0);
+	glRotated(VAL(RIGHTARMZ), 0, 0, 1.0);
+	glRotated(VAL(RIGHTARMY), 0, -1.0, 0);
 	glTranslated(0.3, -0.6, 0);
 	glRotated(20, 0.0, 0.0, 1.0);
 	glRotated(90, 1.0, 0.0, 0.0);
+	
 	glTranslated(0, 0, -0.5);
+	glRotated(VAL(RIGHTARMX), -1.0, 0, 0);
 	if (VAL(TEXTURESKIN))
 		drawTextureCylinder(1, 0.25, 0.25);
 	else drawCylinder(1, 0.25, 0.25);
-	glPopMatrix();
 }
 void SampleModel::drawLowerRightHand() {
-	glPushMatrix();
+
+	// Undo transformations
+	glTranslated(0, 0, 0.5);
+	glRotated(-90, 1.0, 0.0, 0.0);
+	glRotated(-20, 0.0, 0.0, 1.0);
+	glTranslated(-0.3, 0.6, 0);
+	glTranslated(-UPPER_TORSO_RADIUS - 0.2, -0.8, 0);
+
 	glTranslated(UPPER_TORSO_RADIUS + 0.7, -0.3, 0);
 	if (VAL(TEXTURESKIN))
 		drawTextureSphere(0.2);
 	else drawSphere(0.2);
+	glRotated(VAL(RIGHTELBOWX), -1.0, 0, 0);
+	glRotated(VAL(RIGHTELBOWY), 0, 1.0, 0);
 	glTranslated(0, -0.7, 0);
 	glRotated(90, 1.0, 0.0, 0.0);
 	glTranslated(0, 0, -0.6);
 	if (VAL(TEXTURESKIN))
 		drawTextureCylinder(1.2, 0.25, 0.15);
 	else drawCylinder(1.2, 0.25, 0.15);
-	glPopMatrix();
+	
 }
 void SampleModel::drawRightHand() {
-	glPushMatrix();
+	
+	// Undo transformations
+	glTranslated(0, 0, 0.6);
+	glRotated(-90, 1.0, 0.0, 0.0);
+	glTranslated(0, 0.7, 0);
+	glTranslated(-UPPER_TORSO_RADIUS - 0.7, 0.3, 0);
+
 	glTranslated(UPPER_TORSO_RADIUS + 0.7, -1.7, 0);
 	glRotated(90, 1.0, 0.0, 0.0);
 	glTranslated(0, 0, -0.1);
+	glRotated(VAL(RIGHTHANDX), -1.0, 0, 0);
+	glRotated(VAL(RIGHTHANDZ), 0, 0, 1.0);
 	if (VAL(TEXTURESKIN))
 		drawTextureCylinder(0.4, 0.10, 0.05);
 	else drawCylinder(0.4, 0.10, 0.05);
@@ -303,43 +339,62 @@ void SampleModel::drawLeftHandJoint() {
 		drawTextureCylinder(0.4, 0.2, 0.2);
 	else drawCylinder(0.4, 0.2, 0.2);
 	glPopMatrix();
-}
-void SampleModel::drawUpperLeftHand() {
+
 	glPushMatrix();
 	glTranslated(-UPPER_TORSO_RADIUS - 0.2, 0.8, 0);
 	if (VAL(TEXTURESKIN))
 		drawTextureSphere(0.4);
 	else drawSphere(0.4);
-
+	glPopMatrix();
+}
+void SampleModel::drawUpperLeftHand() {
+	glPushMatrix();
+	glTranslated(-UPPER_TORSO_RADIUS - 0.2, 0.8, 0);
+	glRotated(VAL(LEFTARMZ), 0, 0, 1.0);
+	glRotated(VAL(LEFTARMY), 0, 1.0, 0);
 	glTranslated(-0.3, -0.6, 0);
 	glRotated(20, 0.0, 0.0, -1.0);
 	glRotated(90, 1.0, 0.0, 0.0);
 	glTranslated(0, 0, -0.5);
+	glRotated(VAL(LEFTARMX), 1.0, 0, 0);
 	if (VAL(TEXTURESKIN))
 		drawTextureCylinder(1, 0.25, 0.25);
 	else drawCylinder(1, 0.25, 0.25);
-	glPopMatrix();
 }
 void SampleModel::drawLowerLeftHand() {
-	glPushMatrix();
+
+	// Undo Transformations
+	glTranslated(0, 0, 0.5);
+	glRotated(-90, 1.0, 0.0, 0.0);
+	glRotated(-20, 0.0, 0.0, -1.0);
+	glTranslated(0.3, 0.6, 0);
+	glTranslated(UPPER_TORSO_RADIUS + 0.2, -0.8, 0);
+
 	glTranslated(-UPPER_TORSO_RADIUS - 0.7, -0.3, 0);
 	if (VAL(TEXTURESKIN))
 		drawTextureSphere(0.2);
 	else drawSphere(0.2);
-
+	glRotated(VAL(LEFTELBOWX), -1.0, 0, 0);
+	glRotated(VAL(LEFTELBOWY), 0, 1.0, 0);
 	glTranslated(0, -0.7, 0);
 	glRotated(90, 1.0, 0.0, 0.0);
 	glTranslated(0, 0, -0.6);
 	if (VAL(TEXTURESKIN))
 		drawTextureCylinder(1.2, 0.25, 0.15);
 	else drawCylinder(1.2, 0.25, 0.15);
-	glPopMatrix();
 }
 void SampleModel::drawLeftHand() {
-	glPushMatrix();
+	
+	// Undo Transformations
+	glTranslated(0, 0, 0.6);
+	glRotated(-90, 1.0, 0.0, 0.0);
+	glTranslated(0, 0.7, 0);
+	glTranslated(UPPER_TORSO_RADIUS + 0.7, 0.3, 0);
+
 	glTranslated(-UPPER_TORSO_RADIUS - 0.7, -1.7, 0);
 	glRotated(90, 1.0, 0.0, 0.0);
 	glTranslated(0, 0, -0.1);
+	glRotated(VAL(LEFTHANDX), -1.0, 0, 0);
 	if (VAL(TEXTURESKIN))
 		drawTextureCylinder(0.4, 0.10, 0.05);
 	else drawCylinder(0.4, 0.10, 0.05);
@@ -359,12 +414,17 @@ void SampleModel::drawRightLegJoint() {
 void SampleModel::drawUpperRightLeg() {
 	glPushMatrix();
 	glTranslated(0.9, -UPPER_TORSO_RADIUS - LOWER_TORSO_HEIGHT, 0);
+	glRotated(VAL(RIGHTKNEE), -1.0, 0.0, 0.0);
+	glRotated(VAL(RIGHTLEGX), -1.0, 0, 0);
+	glRotated(VAL(RIGHTLEGZ), 0.0, 0, 1.0);
 	if (VAL(TEXTURESKIN))
 		drawTextureSphere(0.3);
 	else drawSphere(0.3);
 
-	if (animate)
+	if (animate) {
 		glRotated(-animUpperLegAngle, 1.0, 0, 0);
+		SETVAL(RIGHTKNEE, 0);
+	}
 
 	glTranslated(0, -0.7, 0);
 	glRotated(90, 1.0, 0.0, 0.0);
@@ -379,32 +439,55 @@ void SampleModel::drawUpperRightLeg() {
 		glTranslated(0, 0, 1.25);
 		drawSphere(0.3);
 	}
-	glPopMatrix();
 }
 void SampleModel::drawLowerRightLeg(){
-	glPushMatrix();
-	if (animate)
+	if (animate) {
 		glRotated(animLowerLegAngle, 1.0, 0, 0);
+		SETVAL(RIGHTKNEE, 0);
+	}
+	
+	//Undo transformations
+	glTranslated(0, 0, -1.25);
+	glTranslated(0, 0, 0.6);
+	glRotated(-90, 1.0, 0.0, 0.0);
+	glTranslated(0, 0.7, 0);
+	glRotated(-VAL(RIGHTKNEE), -1.0, 0.0, 0.0);
+	glTranslated(-0.9, UPPER_TORSO_RADIUS + LOWER_TORSO_HEIGHT, 0);
+
 	glTranslated(0.9, -UPPER_TORSO_RADIUS - LOWER_TORSO_HEIGHT - 0.7 - 0.7 - 0.7, 0);
+	glRotated(VAL(RIGHTKNEE) * 2, 1.0, 0.0, 0.0);
 	glRotated(90, 1.0, 0.0, 0.0);
 	glTranslated(0, 0, -0.7);
 	if (VAL(TEXTURESKIN))
 		drawTextureCylinder(1.4, 0.35, 0.25);
 	else drawCylinder(1.4, 0.35, 0.25);
-	glPopMatrix();
 }
 void SampleModel::drawRightFoot() {
-	glPushMatrix();
-	if (animate)
+	
+	if (animate) {
 		glRotated(animLowerLegAngle, 1.0, 0, 0);
+		SETVAL(RIGHTKNEE, 0);
+	}
+
+	// Undo transformations
+	glTranslated(0, 0, 0.7);
+	glRotated(-90, 1.0, 0.0, 0.0);
+	glRotated(-VAL(RIGHTKNEE) * 2, 1.0, 0.0, 0.0);
+	glTranslated(-0.9, UPPER_TORSO_RADIUS + LOWER_TORSO_HEIGHT + 0.7 + 0.7 + 0.7, 0);
+
 	glTranslated(0.9 + 0.2, -UPPER_TORSO_RADIUS - LOWER_TORSO_HEIGHT - 0.7 - 0.7 - 1.3, 0.4);
+	glTranslated(0, 0, -VAL(RIGHTKNEE) / 50);
 	glRotated(30, 0.0, 1.0, 0.0);
 	glTranslated(0, 0, -0.3);
+	
+
 	if (animate)
 		glRotated(animRightFootAngle, 1.0, 0, 0);
 	if (VAL(TEXTURESKIN))
 		drawTextureCylinder(0.6, 0.25, 0.1);
 	else drawCylinder(0.6, 0.25, 0.1);
+
+	
 	glPopMatrix();
 }
 void SampleModel::drawLeftLegJoint() {
@@ -417,17 +500,28 @@ void SampleModel::drawLeftLegJoint() {
 		drawTextureCylinder(0.7, 0.2, 0.2);
 	else drawCylinder(0.7, 0.2, 0.2);
 	glPopMatrix();
-}
-void SampleModel::drawUpperLeftLeg() {
+
 	glPushMatrix();
 	glTranslated(-0.9, -UPPER_TORSO_RADIUS - LOWER_TORSO_HEIGHT, 0);
 	if (VAL(TEXTURESKIN))
 		drawTextureSphere(0.3);
 	else drawSphere(0.3);
+	glPopMatrix();
+}
+void SampleModel::drawUpperLeftLeg() {
 
-	if (animate) 
+	glPushMatrix();
+	glTranslated(-0.9, -UPPER_TORSO_RADIUS - LOWER_TORSO_HEIGHT, 0);
+	glRotated(VAL(LEFTKNEE), -1.0, 0.0, 0.0);
+	glRotated(VAL(LEFTLEGX), -1.0, 0, 0);
+	glRotated(VAL(LEFTLEGZ), 0.0, 0, 1.0);
+	if (animate){
 		glRotated(animUpperLegAngle, 1.0, 0, 0);
-	
+		SETVAL(LEFTKNEE, 0);
+		SETVAL(LEFTLEGX, 0);
+		SETVAL(LEFTLEGZ, 0);
+	}
+
 	glTranslated(0, -0.7, 0);
 	glRotated(90, 1.0, 0.0, 0.0);
 	glTranslated(0, 0, -0.6);
@@ -441,25 +535,46 @@ void SampleModel::drawUpperLeftLeg() {
 		glTranslated(0, 0, 1.25);
 		drawSphere(0.3);
 	}
-	glPopMatrix();
+
 }
 void SampleModel::drawLowerLeftLeg() {
-	glPushMatrix();
-	if (animate)
+	if (animate) {
 		glRotated(-animLowerLegAngle, 1.0, 0, 0);
+		SETVAL(LEFTKNEE, 0);
+	}
+
+	//Undo transformations
+	glTranslated(0, 0, -1.25);
+	glTranslated(0, 0, 0.6);
+	glRotated(-90, 1.0, 0.0, 0.0);
+	glTranslated(0, 0.7, 0);
+	glRotated(-VAL(LEFTKNEE), -1.0, 0.0, 0.0);
+	glTranslated(0.9, UPPER_TORSO_RADIUS + LOWER_TORSO_HEIGHT, 0);
+
+
 	glTranslated(-0.9, -UPPER_TORSO_RADIUS - LOWER_TORSO_HEIGHT - 0.7 - 0.7 - 0.7, 0);
+	glRotated(2 * VAL(LEFTKNEE), 1.0, 0.0, 0.0);
 	glRotated(90, 1.0, 0.0, 0.0);
 	glTranslated(0, 0, -0.7);
 	if (VAL(TEXTURESKIN))
 		drawTextureCylinder(1.4, 0.35, 0.25);
 	else drawCylinder(1.4, 0.35, 0.25);
-	glPopMatrix();
 }
 void SampleModel::drawLeftFoot() {
-	glPushMatrix();
-	if (animate)
+	if (animate) {
 		glRotated(-animLowerLegAngle, 1.0, 0, 0);
+		SETVAL(LEFTKNEE,0);
+	}
+
+	// Undo Transformations
+	glTranslated(0, 0, 0.7);
+	glRotated(-90, 1.0, 0.0, 0.0);
+	glRotated(-VAL(LEFTKNEE) * 2, 1.0, 0.0, 0.0);
+	glTranslated(0.9, UPPER_TORSO_RADIUS + LOWER_TORSO_HEIGHT + 0.7 + 0.7 + 0.7, 0);
+
+
 	glTranslated(-0.9 - 0.2, -UPPER_TORSO_RADIUS - LOWER_TORSO_HEIGHT - 0.7 - 0.7 - 1.3, 0.4);
+	glTranslated(0, 0, -VAL(LEFTKNEE) / 50);
 	glRotated(30, 0.0, -1.0, 0.0);
 	glTranslated(0, 0, -0.3);
 	if (animate)
@@ -720,6 +835,7 @@ void SampleModel::drawShell() {
 	
 }
 
+
 int main()
 {
 	// Initialize the controls
@@ -728,11 +844,29 @@ int main()
 	controls[XPOS] = ModelerControl("X Position", -5, 5, 0.1f, 0);
 	controls[YPOS] = ModelerControl("Y Position", 0, 5, 0.1f, 0);
 	controls[ZPOS] = ModelerControl("Z Position", -5, 5, 0.1f, 0);
+	controls[RIGHTARMX] = ModelerControl("Right Arm Angle X", 0, 360, 1, 0);
+	controls[RIGHTARMY] = ModelerControl("Right Arm Angle Y", 0, 360, 1, 0);
+	controls[RIGHTARMZ] = ModelerControl("Right Arm Angle Z", 0, 360, 1, 0);
+	controls[RIGHTELBOWX] = ModelerControl("Right Elbow Angle X", 0, 180, 1, 0);
+	controls[RIGHTELBOWY] = ModelerControl("Spin Right Elbow", 0, 360, 1, 0);
+	controls[RIGHTHANDX] = ModelerControl("Right Hand Angle X", 90, -90, 1, 0);
+	controls[LEFTARMX] = ModelerControl("Left Arm Angle X", 0, 360, 1, 0);
+	controls[LEFTARMY] = ModelerControl("Left Arm Angle Y", 0, 360, 1, 0);
+	controls[LEFTARMZ] = ModelerControl("Left Arm Angle Z", 0, 360, 1, 0);
+	controls[LEFTELBOWX] = ModelerControl("Left Elbow Angle X", 0, 180, 1, 0);
+	controls[LEFTELBOWY] = ModelerControl("Spin Left Elbow", 0, 360, 1, 0);
+	controls[LEFTHANDX] = ModelerControl("Left Hand Angle X", 90, -90, 1, 0);
+	controls[LEFTLEGX] = ModelerControl("Left Leg Angle X", -60, 60, 1, 0);
+	controls[LEFTLEGZ] = ModelerControl("Left Leg Angle Z", -80, 80, 1, 0);
+	controls[RIGHTLEGX] = ModelerControl("Right Leg Angle X", -60, 60, 1, 0);
+	controls[RIGHTLEGZ] = ModelerControl("Right Leg Angle Z", -80, 80, 1, 0);
+	controls[LEFTKNEE] = ModelerControl("Left Knee", 0, 15, 1, 0);
+	controls[RIGHTKNEE] = ModelerControl("Right Knee", 0, 15, 1, 0);
 	controls[TAILMOVEMENT] = ModelerControl("Tail Movement", 0, 100, 1, 0);
 	controls[METABALLSKIN] = ModelerControl("Metaball Skin", 0, 1, 1, 0);
 	controls[TEXTURESKIN] = ModelerControl("Texture Skin", 0, 1, 1, 0);
-	controls[HAIR_PLEASE] = ModelerControl("Hair Please", 0, 1, 1, 0);
 	controls[NINJATURTLE] = ModelerControl("Ninja Turtle", 0, 1, 1, 0);
+	controls[EYEBANDANA] = ModelerControl("Eye Bandana", 0, 1, 1, 0);
 
 	ModelerApplication::Instance()->Init(&createSampleModel, controls, NUMCONTROLS);
 	return ModelerApplication::Instance()->Run();

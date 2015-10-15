@@ -13,11 +13,29 @@ enum SampleModelControls
 	XPOS, 
 	YPOS, 
 	ZPOS, 
+	RIGHTARMX,
+	RIGHTARMY,
+	RIGHTARMZ,
+	RIGHTELBOWX,
+	RIGHTELBOWY,
+	RIGHTHANDX,
+	LEFTARMX,
+	LEFTARMY,
+	LEFTARMZ,
+	LEFTELBOWX,
+	LEFTELBOWY,
+	LEFTHANDX,
+	LEFTLEGX,
+	LEFTLEGZ,
+	RIGHTLEGX,
+	RIGHTLEGZ,
+	LEFTKNEE,
+	RIGHTKNEE,
 	TAILMOVEMENT, 
 	METABALLSKIN,
 	TEXTURESKIN,
-	HAIR_PLEASE,
 	NINJATURTLE,
+	EYEBANDANA,
 	NUMCONTROLS
 };
 
@@ -34,6 +52,6 @@ enum SampleModelControls
 // We'll be getting the instance of the application a lot; 
 // might as well have it as a macro.
 #define VAL(x) (ModelerApplication::Instance()->GetControlValue(x))
-//#define SETVAL(x, y) (ModelerApplication::Instance()->SetControlValue(x, y))
+#define SETVAL(x, y) (ModelerApplication::Instance()->SetControlValue(x, y))
 
 #endif

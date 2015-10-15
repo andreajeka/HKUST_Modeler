@@ -72,7 +72,7 @@ public:
 	inline void setPosition()
 	{
 		mElevation = mAzimuth = mTwist = 0.0f;
-		mDolly = -50.0f;
+		mDolly = -25.0f;
 		mElevation = 0.2f;
 		mAzimuth = (float)3.1415926;
 
