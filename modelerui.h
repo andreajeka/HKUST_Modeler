@@ -86,12 +86,9 @@ private:
 	Fl_Input* LeftArmXInput;
 	Fl_Input* LeftArmYInput;
 	Fl_Input* LeftArmZInput;
-	//Fl_Input* leftLeg2XInput;
-	//Fl_Input* leftLeg2YInput;
-	//Fl_Input* leftLeg2ZInput;
-	//Fl_Input* rightLeg1XInput;
-	//Fl_Input* rightLeg1YInput;
-	//Fl_Input* rightLeg1ZInput;
+	Fl_Input* RightArmXInput;
+	Fl_Input* RightArmYInput;
+	Fl_Input* RightArmZInput;
 
 	static void cb_inverse_kinematics(Fl_Menu_*, void*);
 	static void cb_execute_inverse_kinematics(Fl_Widget* o, void* v);

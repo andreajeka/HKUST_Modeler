@@ -260,21 +260,16 @@ void ModelerUserInterface::cb_inverse_kinematics(Fl_Menu_* o, void* v) {
 }
 
 void ModelerUserInterface::cb_execute_inverse_kinematics(Fl_Widget* o, void* v) {
-	float left1X = atof(((ModelerUserInterface*)(o->user_data()))->LeftArmXInput->value());
-	float left1Y = atof(((ModelerUserInterface*)(o->user_data()))->LeftArmYInput->value());
-	float left1Z = atof(((ModelerUserInterface*)(o->user_data()))->LeftArmZInput->value());
+	float leftX = atof(((ModelerUserInterface*)(o->user_data()))->LeftArmXInput->value());
+	float leftY = atof(((ModelerUserInterface*)(o->user_data()))->LeftArmYInput->value());
+	float leftZ = atof(((ModelerUserInterface*)(o->user_data()))->LeftArmZInput->value());
 
-	//float left2X = atof(((ModelerUserInterface*)(o->user_data()))->leftLeg2XInput->value());
-	//float left2Y = atof(((ModelerUserInterface*)(o->user_data()))->leftLeg2YInput->value());
-	//float left2Z = atof(((ModelerUserInterface*)(o->user_data()))->leftLeg2ZInput->value());
+	float rightX = atof(((ModelerUserInterface*)(o->user_data()))->RightArmXInput->value());
+	float rightY = atof(((ModelerUserInterface*)(o->user_data()))->RightArmYInput->value());
+	float rightZ = atof(((ModelerUserInterface*)(o->user_data()))->RightArmZInput->value());
 
-	//float right1X = atof(((ModelerUserInterface*)(o->user_data()))->rightLeg1XInput->value());
-	//float right1Y = atof(((ModelerUserInterface*)(o->user_data()))->rightLeg1YInput->value());
-	//float right1Z = atof(((ModelerUserInterface*)(o->user_data()))->rightLeg1ZInput->value());
-
-	moveLeftArm(left1X, left1Y, left1Z);
-	/*moveLeftLeg2(left2X, left2Y, left2Z);
-	moveRightLeg1(right1X, right1Y, right1Z);*/
+	moveLeftArm(leftX, leftY, leftZ);
+	moveRightArm(rightX, rightY, rightZ);
 }
 
 Fl_Menu_Item ModelerUserInterface::menu_m_controlsMenuBar[] = {
@@ -364,6 +359,9 @@ ModelerUserInterface::ModelerUserInterface() {
   LeftArmXInput = new Fl_Input(100, 20, 100, 25, "Left Arm X");
   LeftArmYInput = new Fl_Input(300, 20, 100, 25, "Left Arm Y");
   LeftArmZInput = new Fl_Input(500, 20, 100, 25, "Left Arm Z");
+  RightArmXInput = new Fl_Input(100, 80, 100, 25, "Right Arm X");
+  RightArmYInput = new Fl_Input(300, 80, 100, 25, "Right Arm Y");
+  RightArmZInput = new Fl_Input(500, 80, 100, 25, "Right Arm Z");
 
   executeInverseKinematicsButton = new Fl_Button(275, 200, 100, 40, "Play");
   executeInverseKinematicsButton->user_data((void*)(this));

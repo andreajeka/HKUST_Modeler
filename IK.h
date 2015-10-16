@@ -11,8 +11,8 @@
 
 #define SQUARE(x) ((x) * (x))
 
-inline double calculateTargetDiff(double tarX, double tarY, double tarZ, double x, double y, double z);
+inline double calculateTargetDiff(double targetX, double targetY, double targetZ, double x, double y, double z);
 
-void moveLeftArm(double tarX, double tarY, double tarZ);
-//can add more here later
+void moveLeftArm(double targetX, double targetY, double targetZ);
+void moveRightArm(double targetX, double targetY, double targetZ);
 #endif
